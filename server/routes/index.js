@@ -75,29 +75,124 @@ router.get('/api/user/:id', (req, res) =>
   })
 });
 
+router.put('/api/vote/add', (req, res) =>
+{
+  const username = req.body.username;
+  const id = req.body.id;
+  const vote = req.body.vote;
+
+  if (vote === "up")
+  {
+    Users.findOneAndUpdate({username}, {$push: {upvotes: id}}).then();
+    Posts.findOneAndUpdate({_id: id}, {$inc: {votes: 1}}).then();
+  }
+  else if (vote === "down")
+  {
+    Users.findOneAndUpdate({username}, {$push: {downvotes: id}}).then();
+    Posts.findOneAndUpdate({_id: id}, {$inc: {votes: -1}}).then();
+  }
+  res.send("ok");
+});
+
+router.put('/api/vote/remove', (req, res) =>
+{
+  const username = req.body.username;
+  const id = req.body.id;
+  const vote = req.body.vote;
+
+  if (vote === "up")
+  {
+    Users.findOneAndUpdate({username}, {$pull: {upvotes: id}}).then();
+    Posts.findOneAndUpdate({_id: id}, {$inc: {votes: -1}}).then();
+  }
+  else if (vote === "down")
+  {
+    Users.findOneAndUpdate({username}, {$pull: {downvotes: id}}).then();
+    Posts.findOneAndUpdate({_id: id}, {$inc: {votes: 1}}).then();
+  }
+
+  res.send("ok");
+});
+
 router.put('/api/vote/update', (req, res) =>
 {
   const username = req.body.username;
   const id = req.body.id;
   const vote = req.body.vote;
-  const newVote = req.body.newVote;
-  const removeVote = req.body.removeVote;
 
-  if (newVote)
+  if (vote === "up")
   {
-    vote === "up" ? Users.findOneAndUpdate({username}, {$push: {upvote: id}}).then((err, ok)  => {if (ok) console.log("ok")}) : Users.findOneAndUpdate({username}, {$push: {downvote: id}}).then((err, ok)  => {if (ok) console.log("ok")});
-    vote === "up" ? Posts.findOneAndUpdate({_id: id}, {$inc: {votes: 1}}).then((err, ok)  => {if (ok) console.log("ok")}) : Posts.findOneAndUpdate({_id: id}, {$inc: {votes: -1}}).then((err, ok)  => {if (ok) console.log("ok")});
+    Users.findOneAndUpdate({username}, {$push: {upvotes: id}, $pull: {downvotes: id}}).then();
+    Posts.findOneAndUpdate({_id: id}, {$inc: {votes: 2}}).then();
   }
-  else if (removeVote)
+  else if (vote === "down")
   {
-    vote === "up" ? Users.findOneAndUpdate({username}, {$pull: {upvote: id}}).then((err, ok)  => {if (ok) console.log("ok")}) : Users.findOneAndUpdate({username}, {$pull: {downvote: id}}).then((err, ok)  => {if (ok) console.log("ok")});
+    Users.findOneAndUpdate({username}, {$push: {downvotes: id}, $pull: {upvotes: id}}).then();
+    Posts.findOneAndUpdate({_id: id}, {$inc: {votes: -2}}).then();
   }
-  else
-  {
-    vote === "up" ? Posts.findOneAndUpdate({_id: id}, {$inc: {votes: 1}}).then((err, ok)  => {if (ok) console.log("ok")}) : Posts.findOneAndUpdate({_id: id}, {$inc: {votes: -1}}).then((err, ok)  => {if (ok) console.log("ok")});
-  }
-  
+
   res.send("ok");
 })
+
+router.get('/api/voted/:email/:codeID', (req, res) => 
+{
+  const email = req.params.email;
+  const codeID = req.params.codeID;
+
+  Users.findOne({email}, (err, user) =>
+  {
+    if (err) throw err;
+    if (user)
+    {
+      if (user.upvotes.includes(codeID))
+      {
+        return res.json({vote: "up"});
+      }
+      else if (user.downvotes.includes(codeID))
+      {
+        return res.json({vote: "down"});
+      }
+      else
+      {
+        return res.json({vote: ""});
+      }
+    }
+    else
+    {
+      return res.json({vote: ""});
+    }
+  })
+});
+
+router.get('/api/code/comments/:id', (req, res) =>
+{
+  const id = req.params.id;
+
+  Comments.find({post: id}, (err, comments) =>
+  {
+    if (err) throw err;
+    if (comments) return res.json({comments});
+    else return res.json({message: "Couldn't find comments for the post"});
+  })
+});
+
+router.post('/api/comment', (req, res) => {
+  const comment = req.body.comment;
+  const post = req.body.post;
+  const creator = req.body.creator;
+
+  Comments.create({
+    comment,
+    creator,
+    post
+  },
+  (err, ok) =>
+  {
+    if (err) throw err;
+    if (ok) return res.json({success: true});
+    else return res.json({success: false});
+  })
+
+});
 
 module.exports = router;

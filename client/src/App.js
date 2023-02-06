@@ -50,9 +50,9 @@ function App() {
           </Container>
         </Navbar>
         <Routes>
-          <Route path="/" element={<Login setJwt={setJwt}/>}/>
+          <Route path="/" element={<Login setJwt={setJwt} setUser={setUser}/>}/>
           <Route path="/register" element={<Register/>}/>
-          <Route path="/home" element={<Home jwt={jwt}/>}/>
+          <Route path="/home" element={<Home jwt={jwt} user={user}/>}/>
           <Route path="*" element={<NotFound/>}/>
         </Routes>
       </div>

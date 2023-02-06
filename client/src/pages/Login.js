@@ -1,6 +1,7 @@
 import { useState } from "react"; 
 import { useNavigate } from "react-router-dom";
 import {ToastContainer, toast} from 'react-toastify';
+import {Buffer} from 'buffer';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Login = (props) =>
@@ -27,6 +28,8 @@ const Login = (props) =>
                 if (json.token)
                 {
                     props.setJwt(json.token);
+                    const user = JSON.parse(Buffer.from(json.token.split(".")[1], "base64").toString());
+                    props.setUser(user);
                     localStorage.setItem('auth_token', json.token);
                     navigate("/home");
                 }
