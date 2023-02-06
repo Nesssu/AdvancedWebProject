@@ -1,5 +1,8 @@
 .App {
   text-align: center;
+  align-items: center;
+  justify-content: center;
+
 }
 
 .App-logo {
@@ -35,4 +38,247 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.InformationArea {
+  margin: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.LoginEmail {
+  margin-top: 50px;
+  width: 400px;
+}
+
+.RegisterEmail {
+  margin-top: 20px;
+  width: 400px;
+}
+
+.RegisterUsername {
+  margin-top: 50px;
+  width: 400px;
+}
+
+.LoginPassword {
+  margin-top: 20px;
+  width: 400px;
+}
+
+.RegisterPassword {
+  margin-top: 20px;
+  width: 400px;
+}
+
+.LoginSubmit {
+  margin-top: 20px;
+  padding: 5px 20px 5px 20px;
+  color: white;
+  font-weight: bold;
+  background-color: #2596be;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px #888;
+  transition: all 0.5s;
+}
+
+.LoginSubmit:hover {
+  background-color: white;
+  color:#2596be;
+}
+
+.RegisterSubmit {
+  margin-top: 20px;
+  padding: 5px 20px 5px 20px;
+  color: white;
+  font-weight: bold;
+  background-color: #2596be;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px #888;
+  transition: all 0.5s;
+}
+
+.RegisterSubmit:hover {
+  background-color: white;
+  color:#2596be;
+}
+
+.InfoText1 {
+  margin-top: 50px;
+  font-size: medium;
+  color: #888;
+}
+
+.Home {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.NewSnippetArea {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.NewSnippetBackground {
+  width: 40%;
+  min-width: 600px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px #888;
+  margin-top: 50px;
+  padding: 25px;
+}
+
+.NewSnippetInput {
+  width: 100%;
+  min-height: 100px;
+  resize: none;
+  border: none;
+  box-shadow: 0px 0px 3px #888;
+  border-radius: 5px;
+  padding: 10px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: small;
+}
+
+.NewSnippetSubmitButton {
+  padding: 5px 20px 5px 20px;
+  color: white;
+  background-color: #2596be;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10px;
+  box-shadow: 0px 0px 5px #888;
+  transition: all 0.5s;
+}
+
+.NewSnippetSubmitButton:hover {
+  color: #2596be;
+  background-color: white;
+}
+
+.Separator {
+  width: 60%;
+  height: 1px;
+  background-color: #888;
+  margin: 20px 0px 20px 0px;
+}
+
+.SnippetArea {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.SnippetBackground {
+  width: 40%;
+  min-width: 600px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px #888;
+  padding: 25px;
+}
+
+.SnippetInput {
+  width: 100%;
+  min-height: 100px;
+  border: none;
+  box-shadow: 0px 0px 3px #888;
+  border-radius: 5px;
+  padding: 10px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: small;
+}
+
+.SnippetInfoArea {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.SnippetCreatorArea {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  margin-top: 10px;
+}
+
+.CreatorText {
+  font-size: medium;
+  padding: 0;
+  margin: 0;
+}
+
+.CreatorTextSpan {
+  font-size: medium;
+  color: #888;
+}
+
+.VotesText {
+  font-size: x-large;
+  font-weight: bold;
+  color: #2596be;
+  padding: 0;
+  margin: 0;
+}
+
+.IconVoted {
+  padding: 0;
+  margin: 0;
+  font-size: x-large;
+  color: #2596be;
+  transition: all 0.5s;
+}
+
+.IconVoted:hover {
+  cursor: pointer;
+}
+
+.IconUnvoted {
+  padding: 0;
+  margin: 0;
+  font-size: x-large;
+  color:  	#C0C0C0;
+  transition: all 0.5s;
+}
+
+.IconUnvoted:hover {
+  cursor: pointer;
+}
+
+.SnippetVoteArea {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.VoteArrowArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 10px;
+}
+
+.VoteArrow {
+  margin: 3px;
+  font-size: x-large;
+}
+
+.VoteAmountArea {
+
 }
