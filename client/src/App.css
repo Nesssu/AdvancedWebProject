@@ -16,6 +16,13 @@
   }
 }
 
+h1 {
+  font-weight: bold;
+  color: #2596be;
+  padding: 0;
+  margin: 0;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -140,7 +147,6 @@
 .NewSnippetInput {
   width: 100%;
   min-height: 100px;
-  resize: none;
   border: none;
   box-shadow: 0px 0px 3px #888;
   border-radius: 5px;

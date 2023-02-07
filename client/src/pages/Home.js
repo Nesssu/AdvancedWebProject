@@ -7,23 +7,10 @@ import { ToastContainer, toast } from "react-toastify";
 const NewSnippet = (props) =>
 {
     const [snippet, setSnippet] = useState("");
-    const [height, setHeight] = useState(1);
 
     const handleSnippetChange = (event) =>
     { 
         setSnippet(event.target.value); 
-        const textareaLineHeight = 24;
-		const previousRows = event.target.rows;
-  	    event.target.rows = 5;
-		const currentRows = ~~(event.target.scrollHeight / textareaLineHeight);
-        if (currentRows === previousRows) {
-    	    event.target.rows = currentRows;
-        }
-		if (currentRows >= 30) {
-			event.target.rows = 30;
-			event.target.scrollTop = event.target.scrollHeight;
-		}
-  	    setHeight(currentRows < 30 ? currentRows : 30);
     }
     const addSnippet = () =>
     {
@@ -92,7 +79,7 @@ const NewSnippet = (props) =>
         <div className="NewSnippetArea">
             <div className="NewSnippetBackground">
                 <div className="NewSnippetInputArea">
-                    <textarea value={snippet} onChange={handleSnippetChange} className="NewSnippetInput" placeholder="Add new code snippet" rows={height} />
+                    <textarea value={snippet} onChange={handleSnippetChange} className="NewSnippetInput" placeholder="Add new code snippet" />
                 </div>
                 <div>
                     <input type="submit" value="Add" onClick={addSnippet} className="NewSnippetSubmitButton"/>
@@ -371,6 +358,7 @@ const Home = (props) =>
     return (
         <div className="App">
             <div className="Home">
+                <h1>Home</h1>
                 {jwt &&
                     <NewSnippet token={jwt} user={props.user} />
                 }
