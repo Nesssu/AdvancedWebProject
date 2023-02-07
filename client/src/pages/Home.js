@@ -359,6 +359,7 @@ const Home = (props) =>
         <div className="App">
             <div className="Home">
                 <h1>Home</h1>
+                <div className="Separator"/>
                 {jwt &&
                     <NewSnippet token={jwt} user={props.user} />
                 }

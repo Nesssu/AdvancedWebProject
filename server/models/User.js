@@ -8,6 +8,6 @@ let userSchema = new Users ({
     password: {type: String},
     upvotes: {type: Array},
     downvotes: {type: Array}
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model("users", userSchema);

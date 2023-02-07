@@ -63,7 +63,7 @@ router.post("/users/register",
       })
     }
   })
-})
+});
 
 router.post("/users/login", (req, res, next) =>
 {
@@ -84,7 +84,8 @@ router.post("/users/login", (req, res, next) =>
           const payload = {
             email: user.email,
             username: user.username,
-            id: user._id
+            id: user._id,
+            joined: user.createdAt
           }
           jwt.sign(
             payload,
@@ -106,7 +107,7 @@ router.post("/users/login", (req, res, next) =>
       })
     }
   })
-})
+});
 
 
 

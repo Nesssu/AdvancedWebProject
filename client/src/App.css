@@ -123,6 +123,7 @@ h1 {
 .Home {
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-direction: column;
   padding-top: 50px;
 }
@@ -378,3 +379,77 @@ h1 {
   padding: 0;
   margin: 0 10px 0 0;
 }
+
+.ProfileArea {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 50px 0px 0px 0px;
+}
+
+.ProfileUsernameArea {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.ProfileUsernameArea label {
+  color: #2596be;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+
+.ProfileEmailArea {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.ProfileEmailArea label {
+  color: #2596be;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+
+.ProfileInput {
+  border-radius: 5px;
+  border: none;
+  box-shadow: 0 0 5px #888;
+  height: 35px;
+  width: 300px;
+  padding: 0 10px 0 10px;
+}
+
+.ProfileInput:focus {
+  outline: none;
+}
+
+.EditProfile {
+  margin: 0 0 0 10px;
+  color: #2596be;
+  background-color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0 5px #888;
+  width: 75px;
+  height: 35px;
+  transition: all 0.5s;
+}
+
+.EditProfile:hover {
+  cursor: pointer;
+  color: white;
+  background-color: #2596be;
+}
+
+.JoinedData {
+  margin: 50px;
+  font-size: small;
+  color: #4d4d4d;
+}
+
+
