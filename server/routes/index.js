@@ -5,18 +5,33 @@ const Comments = require('../models/Comment');
 const Users = require('../models/User');
 const jwt = require('jsonwebtoken');
 
+const authenticateToken = (req, res, next) =>
+{
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  
+  if (token == null) return res.status(401).send("Unauthorized");
+
+  jwt.verify(token, 'secrets', (err, user) =>
+  {
+    if (err) return res.status(401).json({message: "unauthorized"});
+
+    req.user = user;
+    next();
+  })
+}
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.post("/api/code/add", (req, res) =>
+router.post("/api/code/add", authenticateToken, (req, res) =>
 {
   const code = req.body.code;
   const votes = 0;
   const commentIDs = [];
-  const votedIDs = [];
-  const email = req.body.email;
+  const email = req.user.email;
 
   Users.findOne({email}, (err, user) =>
   {
@@ -53,18 +68,6 @@ router.get("/api/code/list", (req, res) =>
   })
 });
 
-router.post("/api/add/comment", (req, res) =>
-{
-  // Add comment to code snippet
-  return res.send("ok");
-});
-
-router.get("/api/comments", (req, res) =>
-{
-  // Get comments to code
-  return res.send("ok");
-});
-
 router.get('/api/user/:id', (req, res) =>
 {
   const ObjectId = req.params.id;
@@ -75,9 +78,9 @@ router.get('/api/user/:id', (req, res) =>
   })
 });
 
-router.put('/api/vote/add', (req, res) =>
+router.put('/api/vote/add', authenticateToken, (req, res) =>
 {
-  const username = req.body.username;
+  const username = req.user.username;
   const id = req.body.id;
   const vote = req.body.vote;
 
@@ -94,9 +97,9 @@ router.put('/api/vote/add', (req, res) =>
   res.send("ok");
 });
 
-router.put('/api/vote/remove', (req, res) =>
+router.put('/api/vote/remove', authenticateToken, (req, res) =>
 {
-  const username = req.body.username;
+  const username = req.user.username;
   const id = req.body.id;
   const vote = req.body.vote;
 
@@ -114,9 +117,9 @@ router.put('/api/vote/remove', (req, res) =>
   res.send("ok");
 });
 
-router.put('/api/vote/update', (req, res) =>
+router.put('/api/vote/update', authenticateToken, (req, res) =>
 {
-  const username = req.body.username;
+  const username = req.user.username;
   const id = req.body.id;
   const vote = req.body.vote;
 
@@ -134,9 +137,9 @@ router.put('/api/vote/update', (req, res) =>
   res.send("ok");
 })
 
-router.get('/api/voted/:email/:codeID', (req, res) => 
+router.get('/api/voted/:codeID', authenticateToken, (req, res) => 
 {
-  const email = req.params.email;
+  const email = req.user.email;
   const codeID = req.params.codeID;
 
   Users.findOne({email}, (err, user) =>
@@ -176,7 +179,7 @@ router.get('/api/code/comments/:id', (req, res) =>
   })
 });
 
-router.post('/api/comment', (req, res) => {
+router.post('/api/comment', authenticateToken, (req, res) => {
   const comment = req.body.comment;
   const post = req.body.post;
   const creator = req.body.creator;
@@ -191,8 +194,19 @@ router.post('/api/comment', (req, res) => {
     if (err) throw err;
     if (ok) return res.json({success: true});
     else return res.json({success: false});
-  })
+  });
+});
 
+router.put('/api/update/code', authenticateToken, (req, res) =>
+{
+  const _id = req.body._id;
+  const code = req.body.code;
+
+  Posts.findOneAndUpdate({_id}, {code}, (err, docs) =>
+  {
+    if (err) return res.json({success: false, message: "Error while updating code"});
+    else return res.json({success: true, message: "Code updated succesfully"});
+  })
 });
 
 module.exports = router;

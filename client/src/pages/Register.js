@@ -46,7 +46,7 @@ const Register = () =>
 
     return (
         <div className="InformationArea">
-            <h3>Register</h3>
+            <h1>Register</h1>
 
             <input id="registerUsername" className="RegisterUsername" type="username" placeholder="Username" value={username} onChange={handleUsernameChange}/>
             <input id="registerEmail" className="RegisterEmail" type="email" placeholder="Email" value={email} onChange={handleEmailChange}/>

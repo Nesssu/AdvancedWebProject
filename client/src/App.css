@@ -125,7 +125,7 @@ h1 {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding-top: 50px;
+  padding-top: 100px;
 }
 
 .NewSnippetArea {
@@ -197,6 +197,11 @@ h1 {
 
 .EditButtonArea {
   padding: 5px;
+  margin-left: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .EditIcon {
@@ -208,6 +213,36 @@ h1 {
 .EditIcon:hover {
   cursor: pointer;
   color: #2596be;
+}
+
+.SaveEditIcon {
+  color: lightgreen;
+  font-size: x-large;
+  padding: 0;
+  margin: 0;
+  transition: all 0.5s;
+}
+
+.SaveEditIcon:hover {
+  color: green;
+  cursor: pointer;
+}
+
+.CancelEditIcon {
+  color: pink;
+  font-size: x-large;
+  padding: 0;
+  margin: 0;
+  transition: all 0.5s;
+}
+
+.CancelEditIcon:hover {
+  cursor: pointer;
+  color: red;
+}
+
+.ApproveEditArea {
+  padding: 0;
 }
 
 .SnippetBackground {
@@ -385,7 +420,7 @@ h1 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 50px 0px 0px 0px;
+  margin: 100px 0px 0px 0px;
 }
 
 .ProfileUsernameArea {

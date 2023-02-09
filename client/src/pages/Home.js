@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import {BsArrowDownSquareFill, BsArrowUpSquareFill} from 'react-icons/bs';
 import {BiEditAlt} from 'react-icons/bi';
+import {RxCrossCircled, RxCheckCircled} from 'react-icons/rx';
 import {Buffer} from 'buffer';
 import { ToastContainer, toast } from "react-toastify";
 
@@ -24,7 +25,8 @@ const NewSnippet = (props) =>
             fetch('/api/code/add', {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "authorization": "Bearer " + props.token
                 },
                 body: JSON.stringify(body)
             })
@@ -94,11 +96,13 @@ const Snippet = (props) =>
 {
     const [voted, setVoted] = useState("");
     const [creatorUsername, setCreatorUsername] = useState("");
-    const [user, setUser] = useState();
+    const [user, setUser] = useState({});
     const [time, setTime] = useState("");
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
     const [editable, setEditable] = useState(false);
+    const [code, setCode] = useState(props.snippet.code);
+    const [codeHistory, setCodeHistory] = useState(props.snippet.code);
 
     useEffect(() =>
     {
@@ -126,19 +130,22 @@ const Snippet = (props) =>
             }
         })
         
-        if (props.jwt)
+        if (props.token)
         {
-            const user = JSON.parse(Buffer.from(props.jwt.split(".")[1], "base64").toString());
+            const user = JSON.parse(Buffer.from(props.token.split(".")[1], "base64").toString());
             setUser(user);
-            fetch('/api/voted/' + user.email + "/" + props.snippet._id, {
-                method: "GET"
+            fetch('/api/voted/' + props.snippet._id, {
+                method: "GET",
+                headers: {
+                    "authorization": "Bearer " + props.token
+                }
             })
             .then(response => response.json())
             .then(res => {
                 setVoted(res.vote);
             });
         }
-    }, [props.snippet.creator, props.snippet.createdAt]);
+    }, [props.snippet.creator, props.snippet.createdAt, editable]);
 
     const handleUpvote = () =>
     {
@@ -167,7 +174,8 @@ const Snippet = (props) =>
         fetch('/api/vote/' + protocol, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "authorization": "Bearer " + props.token
             },
             body: JSON.stringify(body)
         })
@@ -200,7 +208,8 @@ const Snippet = (props) =>
         fetch('/api/vote/' + protocol, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "authorization": "Bearer " + props.token
             },
             body: JSON.stringify(body)
         })
@@ -220,7 +229,8 @@ const Snippet = (props) =>
             fetch('/api/comment', {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "authorization": "Bearer " + props.token
                 },
                 body: JSON.stringify(body)
             })
@@ -266,19 +276,81 @@ const Snippet = (props) =>
         hour = hour[0] + ":" + hour[1];
         return (date + " " + hour);
     }
-    const handleEdit = () => 
+    const handleEditClick = () => 
     {
-        setEditable(!editable);
+        setEditable(true);
+    }
+    const handleEdit = (event) => setCode(event.target.value);
+    const handleEditSave = () =>
+    {
+        const body = {
+            _id: props.snippet._id,
+            code: code
+        }
+
+        fetch('/api/update/code', {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": "Bearer " + props.token
+            },
+            body: JSON.stringify(body)
+        })
+        .then(response => response.json())
+        .then(json => {
+            if (json.success)
+            {
+                toast.success(json.message, {
+                    position: "top-center",
+                    autoClose: 2000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    });
+                
+                setCodeHistory(code);
+            }
+            else
+            {
+                toast.error(json.message, {
+                    position: "top-center",
+                    autoClose: 2000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    });
+            }
+        });
+        setEditable(false);
+        props.updateTheView();
+    }
+    const handleEditCancel = () =>
+    {
+        setCode(codeHistory);
+        setEditable(false);
+        props.updateTheView();
     }
 
     return (
         <div className="SnippetArea">
             <div className="SnippetBackground">
                 <div className="SnippetInputArea">
-                    <textarea value={props.snippet.code} className="SnippetInput" readOnly={true} />
-                    <div className="EditButtonArea" >
-                        <BiEditAlt className="EditIcon" />
-                    </div>
+                    <textarea value={code} className="SnippetInput" readOnly={!editable} onChange={handleEdit} />
+                    {creatorUsername === user.username &&
+                        <div className="EditButtonArea" >
+                            <BiEditAlt className="EditIcon" onClick={handleEditClick} style={editable && {opacity: 0, cursor: 'default'}} />
+                            <div className="ApproveEditArea">
+                                <RxCheckCircled className="SaveEditIcon" style={!editable && {opacity: 0, cursor: 'default'}} onClick={editable ? handleEditSave : undefined} />
+                                <RxCrossCircled className="CancelEditIcon" style={!editable && {opacity: 0, cursor: 'default'}} onClick={editable ? handleEditCancel : undefined} />
+                            </div>
+                        </div>
+                    }
                 </div>
                 <div className="SnippetInfoArea">
                     <div className="SnippetCreatorArea">
@@ -287,8 +359,8 @@ const Snippet = (props) =>
                     </div>
                     <div className="SnippetVoteArea">
                         <div className="VoteArrowArea">
-                            <BsArrowUpSquareFill className={voted === "up" ? "VoteArrow IconVoted": "VoteArrow IconUnvoted"} onClick={props.jwt && handleUpvote}/>
-                            <BsArrowDownSquareFill className={voted === "down" ? "VoteArrow IconVoted": "VoteArrow IconUnvoted"} onClick={props.jwt && handleDownvote} />
+                            <BsArrowUpSquareFill className={voted === "up" ? "VoteArrow IconVoted": "VoteArrow IconUnvoted"} onClick={props.token && handleUpvote}/>
+                            <BsArrowDownSquareFill className={voted === "down" ? "VoteArrow IconVoted": "VoteArrow IconUnvoted"} onClick={props.token && handleDownvote} />
                         </div>
                         <div className="VoteAmountArea">
                             <p className="VotesText">{props.snippet.votes}</p>
@@ -311,7 +383,7 @@ const Snippet = (props) =>
                             })
                     }
                 </div>
-                {props.jwt &&
+                {props.token &&
                     <div className="NewCommentArea">
                         <textarea className="CommentInput" id="commentInput" value={newComment} onChange={handleCommentChange} placeholder="Comment" />
                         <input id="commentSubmit" className="CommentSubmit" type="submit" value="Comment" onClick={handleComment} />
@@ -366,7 +438,7 @@ const Home = (props) =>
                 <div>
                     {codeSnippets.map((item) => 
                         {
-                            return <Snippet key={item._id} snippet={item} voted={true} updateTheView={updateTheView} user={props.user} jwt={jwt} />
+                            return <Snippet key={item._id} snippet={item} voted={true} updateTheView={updateTheView} user={props.user} token={jwt} />
                         })}
                 </div>
             </div>

@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
  const Profile = (props) =>
  {
@@ -7,12 +9,18 @@ import { useEffect, useState } from "react";
     const [usernameEdit, setUsernameEdit] = useState(true);
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() =>
     {
         setUser(props.user);
         setEmail(props.user.email);
         setUsername(props.user.username);
+        const token = localStorage.getItem('auth_token');
+        if (!token)
+        {
+            navigate('/home');
+        }
     }, [props.user, emailEdit, usernameEdit]);
 
     const handleUsernameChange = (event) => { setUsername(event.target.value); }
@@ -30,7 +38,43 @@ import { useEffect, useState } from "react";
     {
         if (!usernameEdit)
         {
-            console.log("New username: " + username);
+            fetch('/api/users/update/username', {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "authorization": "Bearer " + props.token
+                },
+                body: JSON.stringify({newUsername: username})
+            })
+            .then(response => response.json())
+            .then(json => {
+                if (json.success)
+                {
+                    toast.success(json.message, {
+                        position: "top-center",
+                        autoClose: 2000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: false,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                        });
+                }
+                else
+                {
+                    toast.error(json.message, {
+                        position: "top-center",
+                        autoClose: 2000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: false,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                        });
+                }
+            });
         }
         setUsernameEdit(!usernameEdit);
     }
@@ -38,7 +82,43 @@ import { useEffect, useState } from "react";
     {
         if (!emailEdit)
         {
-            console.log("New email: " + email);
+            fetch('/api/users/update/email', {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "authorization": "Bearer " + props.token
+                },
+                body: JSON.stringify({newEmail: email})
+            })
+            .then(response => response.json())
+            .then(json => {
+                if (json.success)
+                {
+                    toast.success(json.message, {
+                        position: "top-center",
+                        autoClose: 2000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: false,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                        });
+                }
+                else
+                {
+                    toast.error(json.message, {
+                        position: "top-center",
+                        autoClose: 2000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: false,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                        });
+                }
+            });
         }
         setEmailEdit(!emailEdit);
     }
@@ -65,6 +145,7 @@ import { useEffect, useState } from "react";
                 user.joined && 
                      <p className="JoinedData">Joined: {formatTime(user.joined)}</p>
             }
+            <ToastContainer />
         </div>
     )
  }

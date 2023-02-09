@@ -35,7 +35,7 @@ function App() {
   return (
     <Router>
       <div className='App'>
-        <Navbar bg="dark" variant="dark">
+        <Navbar bg="dark" variant="dark" fixed='top'>
           <Container>
             <Nav className='me-auto'>
               <Nav.Link href="/home">Home</Nav.Link>
@@ -57,7 +57,7 @@ function App() {
           <Route path="/" element={<Login setJwt={setJwt} setUser={setUser}/>}/>
           <Route path="/register" element={<Register/>}/>
           <Route path="/home" element={<Home jwt={jwt} user={user}/>}/>
-          <Route path="/profile" element={<Profile user={user} />} />
+          <Route path="/profile" element={<Profile user={user} token={jwt} />} />
           <Route path="*" element={<NotFound/>}/>
         </Routes>
       </div>

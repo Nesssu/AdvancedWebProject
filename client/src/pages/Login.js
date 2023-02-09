@@ -1,4 +1,4 @@
-import { useState } from "react"; 
+import { useEffect, useState } from "react"; 
 import { useNavigate } from "react-router-dom";
 import {ToastContainer, toast} from 'react-toastify';
 import {Buffer} from 'buffer';
@@ -12,6 +12,14 @@ const Login = (props) =>
     const handleEmailChange = (event) => { setEmail(event.target.value); }
     const handlePasswordChange = (event) => { setPassword(event.target.value); }
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem('auth_token');
+        if (token)
+        {
+            navigate('/home');
+        }
+    }, []);
 
     const login = () =>
     {
@@ -52,7 +60,7 @@ const Login = (props) =>
 
     return (
         <div className="InformationArea">
-            <h3>Login</h3>
+            <h1>Login</h1>
 
             <input id="loginEmail" className="LoginEmail" type="email" placeholder="Email" value={email} onChange={handleEmailChange}/>
             <input id="loginPassword" className="LoginPassword" type="password" placeholder="Password" value={password} onChange={handlePasswordChange}/>

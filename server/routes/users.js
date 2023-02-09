@@ -7,9 +7,22 @@ const jwt = require("jsonwebtoken");
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({storage});
-router.get('/users', function(req, res, next) {
-  res.send('respond with a resource');
-});
+
+const authenticateToken = (req, res, next) =>
+{
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  
+  if (token == null) return res.status(401).send("Unauthorized");
+
+  jwt.verify(token, 'secrets', (err, user) =>
+  {
+    if (err) return res.status(401).json({message: "unauthorized"});
+
+    req.user = user;
+    next();
+  })
+}
 
 router.post("/users/register",
   upload.none(),
@@ -107,6 +120,30 @@ router.post("/users/login", (req, res, next) =>
       })
     }
   })
+});
+
+router.put('/users/update/username', authenticateToken, (req, res) => 
+{
+  const email = req.user.email;
+  const newUsername = req.body.newUsername;
+
+  User.findOneAndUpdate({email}, {username: newUsername}, (err, docs) =>
+  {
+    if (err) return res.json({success: false, message: "Error while updating username"});
+    else return res.json({success: true, message: "Username updated"});
+  });
+});
+
+router.put('/users/update/email', authenticateToken, (req, res) =>
+{
+  const username = req.user.username;
+  const newEmail = req.body.newEmail;
+
+  User.findOneAndUpdate({username}, {email: newEmail}, (err, docs) =>
+  {
+    if (err) return res.json({success: false, message: "Error while updatign email"});
+    else return res.json({success: true, message: "Email updated"});
+  });
 });
 
 
