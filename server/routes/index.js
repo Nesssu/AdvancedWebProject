@@ -5,6 +5,7 @@ const Comments = require('../models/Comment');
 const Users = require('../models/User');
 const jwt = require('jsonwebtoken');
 
+// Authetication middleware used to authenticate the user
 const authenticateToken = (req, res, next) =>
 {
   const authHeader = req.headers['authorization'];
@@ -12,7 +13,7 @@ const authenticateToken = (req, res, next) =>
   
   if (token == null) return res.status(401).send("Unauthorized");
 
-  jwt.verify(token, 'secrets', (err, user) =>
+  jwt.verify(token, 'bananaboat', (err, user) =>
   {
     if (err) return res.status(401).json({message: "unauthorized"});
 
@@ -26,6 +27,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+// Route to add code snippets to the database
 router.post("/api/code/add", authenticateToken, (req, res) =>
 {
   const code = req.body.code;
@@ -48,17 +50,15 @@ router.post("/api/code/add", authenticateToken, (req, res) =>
         (err, ok) =>
         {
           if (err) return res.json({message: "Unable to post your code due to an error!"});
+          // If the code is added succesfully, an empty object is sent to client
           return res.json({});
         }
       )
     }
-    else 
-    {
-      return res.json({message: "You tried to post from a non existing account!"});
-    }
   })
 });
 
+// Route to get all the posted codes from the database
 router.get("/api/code/list", (req, res) =>
 {
   Posts.find({}, (err, posts) =>
@@ -68,6 +68,7 @@ router.get("/api/code/list", (req, res) =>
   })
 });
 
+// Route to get the user data with the users id
 router.get('/api/user/:id', (req, res) =>
 {
   const ObjectId = req.params.id;
@@ -78,6 +79,7 @@ router.get('/api/user/:id', (req, res) =>
   })
 });
 
+// Route to add new vote from the user that hasn't voted yet
 router.put('/api/vote/add', authenticateToken, (req, res) =>
 {
   const username = req.user.username;
@@ -97,6 +99,7 @@ router.put('/api/vote/add', authenticateToken, (req, res) =>
   res.send("ok");
 });
 
+// Route to remove the users vote from the posted code
 router.put('/api/vote/remove', authenticateToken, (req, res) =>
 {
   const username = req.user.username;
@@ -117,6 +120,7 @@ router.put('/api/vote/remove', authenticateToken, (req, res) =>
   res.send("ok");
 });
 
+// Route to update the vote from up to down or vice versa
 router.put('/api/vote/update', authenticateToken, (req, res) =>
 {
   const username = req.user.username;
@@ -137,6 +141,7 @@ router.put('/api/vote/update', authenticateToken, (req, res) =>
   res.send("ok");
 })
 
+// Route to find out what the user has voted on a sertain post
 router.get('/api/voted/:codeID', authenticateToken, (req, res) => 
 {
   const email = req.user.email;
@@ -149,24 +154,24 @@ router.get('/api/voted/:codeID', authenticateToken, (req, res) =>
     {
       if (user.upvotes.includes(codeID))
       {
+        // Sends 'up' to the client if the user has upvoted on the post
         return res.json({vote: "up"});
       }
       else if (user.downvotes.includes(codeID))
       {
+        // Sends 'down' to the client if the user has downvoted on the post
         return res.json({vote: "down"});
       }
       else
       {
+        // Sends an empty string to the client if the user hasn't voted on the post yet
         return res.json({vote: ""});
       }
-    }
-    else
-    {
-      return res.json({vote: ""});
     }
   })
 });
 
+// Route to get all the comments made for a sertain post
 router.get('/api/code/comments/:id', (req, res) =>
 {
   const id = req.params.id;
@@ -179,6 +184,7 @@ router.get('/api/code/comments/:id', (req, res) =>
   })
 });
 
+// Route to add a new comment to the database
 router.post('/api/comment', authenticateToken, (req, res) => {
   const comment = req.body.comment;
   const post = req.body.post;
@@ -197,6 +203,7 @@ router.post('/api/comment', authenticateToken, (req, res) => {
   });
 });
 
+// Route to update already posted code snippet.
 router.put('/api/update/code', authenticateToken, (req, res) =>
 {
   const _id = req.body._id;

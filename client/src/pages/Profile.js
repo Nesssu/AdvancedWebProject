@@ -17,14 +17,16 @@ import { ToastContainer, toast } from "react-toastify";
         setEmail(props.user.email);
         setUsername(props.user.username);
         const token = localStorage.getItem('auth_token');
+        // If the localStorage doesn't have a token, the user is redirected to the home page, because they are not logged in
         if (!token)
         {
             navigate('/home');
         }
     }, [props.user, emailEdit, usernameEdit]);
-
+    // Functions that handle the state changes for the inputs
     const handleUsernameChange = (event) => { setUsername(event.target.value); }
     const handleEmailChange = (event) => { setEmail(event.target.value); }
+    // Function to format the 'createdAt' time from mongoDB to better format
     const formatTime = (time) => 
     {
         const splittedTime = time.split("T");
@@ -38,6 +40,7 @@ import { ToastContainer, toast } from "react-toastify";
     {
         if (!usernameEdit)
         {
+            // Sends the new username to the server
             fetch('/api/users/update/username', {
                 method: "PUT",
                 headers: {
@@ -48,6 +51,7 @@ import { ToastContainer, toast } from "react-toastify";
             })
             .then(response => response.json())
             .then(json => {
+                // If the server responds with a success, a succesful toast message is shown
                 if (json.success)
                 {
                     toast.success(json.message, {
@@ -61,6 +65,7 @@ import { ToastContainer, toast } from "react-toastify";
                         theme: "light",
                         });
                 }
+                // Otherwise an error message is shown in a toast message
                 else
                 {
                     toast.error(json.message, {
@@ -82,6 +87,7 @@ import { ToastContainer, toast } from "react-toastify";
     {
         if (!emailEdit)
         {
+            // New email is sent to the server
             fetch('/api/users/update/email', {
                 method: "PUT",
                 headers: {
@@ -92,6 +98,7 @@ import { ToastContainer, toast } from "react-toastify";
             })
             .then(response => response.json())
             .then(json => {
+                // If the server responds with a success, a succesful toast message is shown
                 if (json.success)
                 {
                     toast.success(json.message, {
@@ -105,6 +112,7 @@ import { ToastContainer, toast } from "react-toastify";
                         theme: "light",
                         });
                 }
+                // Otherwise a error message is shown in a toast message
                 else
                 {
                     toast.error(json.message, {

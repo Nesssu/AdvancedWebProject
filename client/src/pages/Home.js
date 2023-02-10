@@ -407,17 +407,14 @@ const Home = (props) =>
         {
             setJwt(token);
         }
-
+        // Getting all the posted code snippets from the database
         fetch('/api/code/list', {
             method: "GET"
         })
         .then(response => response.json())
         .then(json => {
-            if (json.message)
-            {
-                console.log(json.message)
-            }
-            else
+            // If the server doesn't respond with a message, errors didn't happen
+            if (!json.message)
             {
                 setCodeSnippets(json.posts);
             }
@@ -432,6 +429,7 @@ const Home = (props) =>
             <div className="Home">
                 <h1>Home</h1>
                 <div className="Separator"/>
+                {/* If the localStorage has a token, the NewSnippet component is shown, which allows the user to post new code snippets */}
                 {jwt &&
                     <NewSnippet token={jwt} user={props.user} />
                 }

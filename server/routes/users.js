@@ -8,6 +8,7 @@ const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({storage});
 
+// Middleware used to authenticate the user
 const authenticateToken = (req, res, next) =>
 {
   const authHeader = req.headers['authorization'];
@@ -15,7 +16,7 @@ const authenticateToken = (req, res, next) =>
   
   if (token == null) return res.status(401).send("Unauthorized");
 
-  jwt.verify(token, 'secrets', (err, user) =>
+  jwt.verify(token, 'bananaboat', (err, user) =>
   {
     if (err) return res.status(401).json({message: "unauthorized"});
 
@@ -24,6 +25,7 @@ const authenticateToken = (req, res, next) =>
   })
 }
 
+// Route to register new users. Email and password validation is done with express-validator middleware
 router.post("/users/register",
   upload.none(),
   body('email').isEmail(),
@@ -69,6 +71,7 @@ router.post("/users/register",
             (err, ok) =>
             {
               if (err) throw err;
+              // If registration is succesful, an empty object is sent to the client.
               return res.json({});
             }
           )
@@ -78,6 +81,7 @@ router.post("/users/register",
   })
 });
 
+// Route to login the user. 
 router.post("/users/login", (req, res, next) =>
 {
   const email = req.body.email;
@@ -102,13 +106,14 @@ router.post("/users/login", (req, res, next) =>
           }
           jwt.sign(
             payload,
-            'secrets',
+            'bananaboat',
             {
-              expiresIn: 10000
+              expiresIn: 100000
             },
             (err, token) =>
             {
               if (err) throw err;
+              // If login is succesful, a jwt token is sent to the client
               return res.json({token});
             }
           )
@@ -122,6 +127,7 @@ router.post("/users/login", (req, res, next) =>
   })
 });
 
+// Route that allows the user to update their username
 router.put('/users/update/username', authenticateToken, (req, res) => 
 {
   const email = req.user.email;
@@ -134,6 +140,7 @@ router.put('/users/update/username', authenticateToken, (req, res) =>
   });
 });
 
+// Route that allows the user to update their email address
 router.put('/users/update/email', authenticateToken, (req, res) =>
 {
   const username = req.user.username;
@@ -145,7 +152,5 @@ router.put('/users/update/email', authenticateToken, (req, res) =>
     else return res.json({success: true, message: "Email updated"});
   });
 });
-
-
 
 module.exports = router;

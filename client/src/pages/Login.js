@@ -9,12 +9,14 @@ const Login = (props) =>
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    // Functions that handle the state changes for the inputs
     const handleEmailChange = (event) => { setEmail(event.target.value); }
     const handlePasswordChange = (event) => { setPassword(event.target.value); }
     const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('auth_token');
+        // If the localStorage has a token, the user is already logged in and is redirected to the home page
         if (token)
         {
             navigate('/home');
@@ -23,6 +25,7 @@ const Login = (props) =>
 
     const login = () =>
     {
+        // Sends the data to the server
         fetch("/api/users/login", {
             method: "POST",
             headers: {
@@ -33,14 +36,18 @@ const Login = (props) =>
         .then(response => response.json())
         .then(json =>
             {
+                // If the server responds with a token, the login info is valid
                 if (json.token)
                 {
                     props.setJwt(json.token);
                     const user = JSON.parse(Buffer.from(json.token.split(".")[1], "base64").toString());
                     props.setUser(user);
+                    // The token is stored into localStorage
                     localStorage.setItem('auth_token', json.token);
+                    // And the user is redirected to the home page
                     navigate("/home");
                 }
+                // If the login info is invalid the error message is shown inside a toast message
                 else {
                     toast.error(json.message, {
                         position: "top-center",

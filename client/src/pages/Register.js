@@ -8,6 +8,7 @@ const Register = () =>
     const [password, setPassword] = useState("");
     const [username, setUsername] = useState("");
 
+    // Functions that handle the state changes for the inputs
     const handleEmailChange = (event) => { setEmail(event.target.value); }
     const handlePasswordChange = (event) => { setPassword(event.target.value); }
     const handleUsernameChange = (event) => { setUsername(event.target.value); } 
@@ -15,6 +16,7 @@ const Register = () =>
 
     const register = () =>
     {
+        // Sending the data to the server
         fetch("/api/users/register", {
             method: "POST",
             headers: {
@@ -24,6 +26,8 @@ const Register = () =>
         })
         .then(response => response.json())
         .then(json => {
+            // If the server responds with a message, the data is invalid and the message
+            // is shown in a 'react-toastify' toast message
             if (json.message)
             {
                 toast.error(json.message, {
@@ -39,6 +43,7 @@ const Register = () =>
             }
             else
             {
+                // If the server responds with a empty object, the user is redirected to the login page
                 navigate("/");
             }
         })
