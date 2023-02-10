@@ -61,6 +61,7 @@ function App() {
           <Route path="/register" element={<Register/>}/>
           <Route path="/home" element={<Home jwt={jwt} user={user}/>}/>
           <Route path="/profile" element={<Profile user={user} token={jwt} />} />
+          <Route path="/profile/:username" element={<ViewProfile />} />
           <Route path="*" element={<NotFound/>}/>
         </Routes>
       </div>
