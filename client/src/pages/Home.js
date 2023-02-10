@@ -21,7 +21,7 @@ const NewSnippet = (props) =>
                 code: snippet,
                 email: props.user.email,
             };
-
+            // Sends the new code to the server
             fetch('/api/code/add', {
                 method: "POST",
                 headers: {
@@ -33,6 +33,7 @@ const NewSnippet = (props) =>
             .then(response => response.json())
             .then(json => 
                 {
+                    // If the server responds with a message, the code wasn't posted to the server and the error is shwon in a toast message
                     if (json.message)
                     {
                         toast.error(json.message, {
@@ -46,6 +47,7 @@ const NewSnippet = (props) =>
                             theme: "dark",
                             });
                     }
+                    // If the code is posted succesfully, the success message is shown in a toast message
                     else
                     {
                         setSnippet("");
@@ -62,6 +64,7 @@ const NewSnippet = (props) =>
                     }
                 })
         }
+        // If the textarea is empty, the code cannot be posted and the error message is shown in a toast message
         else
         {
             toast.error('Cannot post empty code snippets', {
@@ -107,7 +110,8 @@ const Snippet = (props) =>
     useEffect(() =>
     {
         setTime(formatTime(props.snippet.createdAt));
-
+        
+        // Gets the information about the creator of the snippets creator and sets their username to the state
         fetch('/api/user/' + props.snippet.creator, {
         })
         .then(response => response.json())
@@ -119,6 +123,7 @@ const Snippet = (props) =>
                 }
             })
         
+        // Gets all the comments that are made for this post and sets them to the state
         fetch('/api/code/comments/' + props.snippet._id, {
             method: "GET"
         })
@@ -134,6 +139,8 @@ const Snippet = (props) =>
         {
             const user = JSON.parse(Buffer.from(props.token.split(".")[1], "base64").toString());
             setUser(user);
+
+            // Gets the current user vote on this post and sets it to the state
             fetch('/api/voted/' + props.snippet._id, {
                 method: "GET",
                 headers: {
@@ -147,8 +154,10 @@ const Snippet = (props) =>
         }
     }, [props.snippet.creator, props.snippet.createdAt, editable]);
 
+    // This funtions handles the upvote
     const handleUpvote = () =>
     {
+        // Check what the protocol should be
         let protocol = "add";
         if (voted === "")
         {
@@ -165,12 +174,14 @@ const Snippet = (props) =>
             protocol = "remove";
         }
 
+        // Creates the body for the request
         let body = {
             username: user.username,
             id: props.snippet._id,
             vote: "up"
         };
 
+        // Sends the body to the server
         fetch('/api/vote/' + protocol, {
             method: "PUT",
             headers: {
@@ -181,8 +192,11 @@ const Snippet = (props) =>
         })
         .then(props.updateTheView);
     }
+
+    // This functions handles the downvotes
     const handleDownvote = () => 
     {
+        // Checks what the protocol should be
         let protocol = "add";
         if (voted === "")
         {
@@ -199,12 +213,14 @@ const Snippet = (props) =>
             protocol = "remove";
         }
 
+        // Creates the body for the request
         let body = {
             username: user.username,
             id: props.snippet._id,
             vote: "down"
         };
 
+        // Sends the data to the server
         fetch('/api/vote/' + protocol, {
             method: "PUT",
             headers: {
@@ -216,8 +232,11 @@ const Snippet = (props) =>
         .then(props.updateTheView);
     }
     const handleCommentChange = (event) => setNewComment(event.target.value);
+
+    // Function that handles adding new comments
     const handleComment = () => 
     {
+        // Comment can only be posted if it's not empty
         if (newComment !== "")
         {
             const body = {
@@ -226,6 +245,7 @@ const Snippet = (props) =>
                 post: props.snippet._id
             };
 
+            // Sends the data to the server
             fetch('/api/comment', {
                 method: "POST",
                 headers: {
@@ -236,6 +256,7 @@ const Snippet = (props) =>
             })
             .then(response => response.json())
             .then(json => {
+                // If the server responds with a success, a succesful message is shown in a toast message
                 if (json.success)
                 {
                     setNewComment("");
@@ -253,6 +274,7 @@ const Snippet = (props) =>
             })
             props.updateTheView();
         }
+        // If the input is empty, message is shown in a toast message
         else 
         {
             toast.error("Comment can't be empty", {
@@ -267,6 +289,7 @@ const Snippet = (props) =>
                 });
         }
     }
+    // Function to format the MongoDB 'createdAt' time to a better format
     const formatTime = (time) => 
     {
         const splittedTime = time.split("T");
@@ -281,13 +304,14 @@ const Snippet = (props) =>
         setEditable(true);
     }
     const handleEdit = (event) => setCode(event.target.value);
+    // Function to handle the post editing
     const handleEditSave = () =>
     {
         const body = {
             _id: props.snippet._id,
             code: code
         }
-
+        // Sends the new code to the server
         fetch('/api/update/code', {
             method: "PUT",
             headers: {
@@ -298,6 +322,7 @@ const Snippet = (props) =>
         })
         .then(response => response.json())
         .then(json => {
+            // If server responds with a success, succesful message is shown in a toast message
             if (json.success)
             {
                 toast.success(json.message, {
@@ -313,6 +338,7 @@ const Snippet = (props) =>
                 
                 setCodeHistory(code);
             }
+            // If the update is not succesful, the error message is shown in a toast message
             else
             {
                 toast.error(json.message, {
@@ -330,8 +356,10 @@ const Snippet = (props) =>
         setEditable(false);
         props.updateTheView();
     }
+    // Function that handles the cancelling of code editing
     const handleEditCancel = () =>
     {
+        // Gets the original code from the state and updates it to the codes state
         setCode(codeHistory);
         setEditable(false);
         props.updateTheView();
@@ -342,6 +370,7 @@ const Snippet = (props) =>
             <div className="SnippetBackground">
                 <div className="SnippetInputArea">
                     <textarea value={code} className="SnippetInput" readOnly={!editable} onChange={handleEdit} />
+                    {/* If the currently logged in user is the same as the creator of this post, editing is allowed */}
                     {creatorUsername === user.username &&
                         <div className="EditButtonArea" >
                             <BiEditAlt className="EditIcon" onClick={handleEditClick} style={editable && {opacity: 0, cursor: 'default'}} />
@@ -359,6 +388,7 @@ const Snippet = (props) =>
                     </div>
                     <div className="SnippetVoteArea">
                         <div className="VoteArrowArea">
+                            {/* If the user is logged in voting is allowed, otherwise onClicks are disabled */}
                             <BsArrowUpSquareFill className={voted === "up" ? "VoteArrow IconVoted": "VoteArrow IconUnvoted"} onClick={props.token && handleUpvote}/>
                             <BsArrowDownSquareFill className={voted === "down" ? "VoteArrow IconVoted": "VoteArrow IconUnvoted"} onClick={props.token && handleDownvote} />
                         </div>
@@ -368,6 +398,7 @@ const Snippet = (props) =>
                     </div>
                 </div>
                 <div>
+                    {/* Map all the comments made for this post */}
                     {
                         comments.map((comment, i) => 
                             {
@@ -383,6 +414,7 @@ const Snippet = (props) =>
                             })
                     }
                 </div>
+                {/* If the user is logged in, ability to comment the post is available */}
                 {props.token &&
                     <div className="NewCommentArea">
                         <textarea className="CommentInput" id="commentInput" value={newComment} onChange={handleCommentChange} placeholder="Comment" />
@@ -434,6 +466,7 @@ const Home = (props) =>
                     <NewSnippet token={jwt} user={props.user} />
                 }
                 <div>
+                    {/* Maps all the code snippets that are already posted */}
                     {codeSnippets.map((item) => 
                         {
                             return <Snippet key={item._id} snippet={item} voted={true} updateTheView={updateTheView} user={props.user} token={jwt} />

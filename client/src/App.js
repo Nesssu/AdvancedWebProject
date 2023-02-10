@@ -35,11 +35,13 @@ function App() {
   return (
     <Router>
       <div className='App'>
+        {/* Bootsrap navbar is used */}
         <Navbar bg="dark" variant="dark" fixed='top'>
           <Container>
             <Nav className='me-auto'>
               <Nav.Link href="/home">Home</Nav.Link>
             </Nav>
+            {/* If the user is not logged in, Login and register links are shown in the navbar */}
             {jwt === null ?
               <Nav>
                 <Nav.Link href="/">Login</Nav.Link>
@@ -47,6 +49,7 @@ function App() {
               </Nav>
               :
               <Nav>
+                {/* If the user is logged in, profile and logout links are shown in the navbar */}
                 <Nav.Link href="/profile" >Profile</Nav.Link>
                 <Nav.Link href="/" onClick={logout}>Logout</Nav.Link>
               </Nav>
