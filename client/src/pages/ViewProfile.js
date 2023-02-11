@@ -11,6 +11,7 @@ const ViewProfile = (props) =>
 
     useEffect(() =>
     {
+        console.log(id);
         fetch('/api/user/' + id)
         .then(response => response.json())
         .then(json => {
@@ -34,10 +35,14 @@ const ViewProfile = (props) =>
     }
 
     return (
-        <div>
-            <h1>username: {username}</h1>
-            <h1>email: {email}</h1>
-            <h1>joined: {formatTime(joined)}</h1>
+        <div className="ProfileArea">
+            <p><span>Username: </span>{username}</p>
+            <p><span>Email: </span>{email}</p>
+            <p><span>Joined: </span>{formatTime(joined)}</p>
+
+            <div className="ProfileBioArea" >
+
+            </div>
         </div>
     )
 }

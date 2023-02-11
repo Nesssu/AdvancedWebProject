@@ -383,7 +383,7 @@ const Snippet = (props) =>
                 </div>
                 <div className="SnippetInfoArea">
                     <div className="SnippetCreatorArea">
-                        <p className="CreatorText"><span className="CreatorTextSpan">Publisher:</span> {creatorUsername}</p>
+                        <p className="CreatorText"><span className="CreatorTextSpan">Publisher: </span><a href={"/profile/" + props.snippet.creator}>{creatorUsername}</a></p>
                         <p className="CreatorText"><span className="CreatorTextSpan">Posted:</span> {time}</p>
                     </div>
                     <div className="SnippetVoteArea">

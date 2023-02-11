@@ -264,6 +264,17 @@ h1 {
   margin: 0;
 }
 
+.CreatorText a {
+  text-decoration: none;
+  color: #2596be;
+  font-weight: bold;
+}
+
+.CreatorText a:hover {
+  color: #2596be;
+  text-decoration: underline;
+}
+
 .CreatorTextSpan {
   font-size: medium;
   color: #888;
