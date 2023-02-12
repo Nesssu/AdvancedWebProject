@@ -4,6 +4,7 @@ const Posts = require('../models/Post');
 const Comments = require('../models/Comment');
 const Users = require('../models/User');
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
 // Authetication middleware used to authenticate the user
 const authenticateToken = (req, res, next) =>
@@ -209,11 +210,23 @@ router.put('/api/update/code', authenticateToken, (req, res) =>
   const _id = req.body._id;
   const code = req.body.code;
 
-  Posts.findOneAndUpdate({_id}, {code}, (err, docs) =>
+  Posts.findOneAndUpdate({_id}, {code}, (err, ok) =>
   {
     if (err) return res.json({success: false, message: "Error while updating code"});
     else return res.json({success: true, message: "Code updated succesfully"});
   })
 });
+
+router.post('/api/add/bio', authenticateToken, (req, res) =>
+{
+  const bio = req.body.bio;
+  const username = req.user.username;
+
+  User.findOneAndUpdate({username}, {bio}, (err, ok) =>
+  {
+    if (err) return res.json({success: false, message: "Error while adding bio"});
+    else return res.json({success: true, message: "Bio added succesfully"});
+  })
+})
 
 module.exports = router;

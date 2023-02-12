@@ -6,6 +6,7 @@ let userSchema = new Users ({
     username: {type: String},
     email: {type: String},
     password: {type: String},
+    bio: {type: String},
     upvotes: {type: Array},
     downvotes: {type: Array}
 }, { timestamps: true });

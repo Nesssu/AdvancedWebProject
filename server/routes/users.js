@@ -65,6 +65,7 @@ router.post("/users/register",
               email: email,
               password: hash,
               username: username,
+              bio: "",
               upvotes: [],
               downvotes: []
             },
