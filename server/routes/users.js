@@ -103,7 +103,8 @@ router.post("/users/login", (req, res, next) =>
             email: user.email,
             username: user.username,
             id: user._id,
-            joined: user.createdAt
+            joined: user.createdAt,
+            bio: user.bio
           }
           jwt.sign(
             payload,

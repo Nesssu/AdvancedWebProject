@@ -78,6 +78,7 @@ const NewSnippet = (props) =>
                 theme: "dark",
                 });
         }
+        props.updateTheView();
     }
 
     return (
@@ -152,7 +153,7 @@ const Snippet = (props) =>
                 setVoted(res.vote);
             });
         }
-    }, [props.snippet.creator, props.snippet.createdAt, editable]);
+    }, [props]);
 
     // This funtions handles the upvote
     const handleUpvote = () =>
@@ -463,7 +464,7 @@ const Home = (props) =>
                 <div className="Separator"/>
                 {/* If the localStorage has a token, the NewSnippet component is shown, which allows the user to post new code snippets */}
                 {jwt &&
-                    <NewSnippet token={jwt} user={props.user} />
+                    <NewSnippet token={jwt} user={props.user} updateTheView={updateTheView} />
                 }
                 <div>
                     {/* Maps all the code snippets that are already posted */}

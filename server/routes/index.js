@@ -219,7 +219,7 @@ router.put('/api/update/code', authenticateToken, (req, res) =>
 
 router.post('/api/add/bio', authenticateToken, (req, res) =>
 {
-  const bio = req.body.bio;
+  const bio = req.body.newBio;
   const username = req.user.username;
 
   User.findOneAndUpdate({username}, {bio}, (err, ok) =>
