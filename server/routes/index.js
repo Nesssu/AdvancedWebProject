@@ -28,6 +28,21 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+// Route to get a single post
+router.get("/api/code/:id", (req, res) =>
+{
+  const id = req.params.id;
+
+  Posts.findOne({_id: id}, (err, post) =>
+  {
+    if (err) throw err;
+    if (post)
+    {
+      return res.json({post});
+    }
+  })
+})
+
 // Route to add code snippets to the database
 router.post("/api/code/add", authenticateToken, (req, res) =>
 {

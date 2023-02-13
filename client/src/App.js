@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
+import Post from './pages/Post';
 import ViewProfile from './pages/ViewProfile';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
@@ -63,6 +64,7 @@ function App() {
           <Route path="/home" element={<Home jwt={jwt} user={user}/>}/>
           <Route path="/profile" element={<Profile user={user} token={jwt} />} />
           <Route path="/profile/:id" element={<ViewProfile />} />
+          <Route path="/post/:id" element={<Post jwt={jwt} user={user}/>} />
           <Route path="*" element={<NotFound/>}/>
         </Routes>
       </div>
