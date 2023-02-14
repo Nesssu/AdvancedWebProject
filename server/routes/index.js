@@ -73,10 +73,10 @@ router.post("/api/code/add", authenticateToken, (req, res) =>
   })
 });
 
-// Route to get all the posted codes from the database
+// Route to get all the posted codes from the database and sort them so that the newest post will be shown first
 router.get("/api/code/list", (req, res) =>
 {
-  Posts.find({}, (err, posts) =>
+  Posts.find({}, null, {sort: {createdAt: -1}}, (err, posts) =>
   {
     if (err) return res.json({message: err});
     else return res.json({posts});
@@ -105,12 +105,12 @@ router.put('/api/vote/add', authenticateToken, (req, res) =>
   if (vote === "up")
   {
     Users.findOneAndUpdate({username}, {$push: {upvotes: id}}).then();
-    Posts.findOneAndUpdate({_id: id}, {$inc: {votes: 1}}).then();
+    Posts.findOneAndUpdate({_id: id}, {$inc: {votes: 1}}, {timestamps: false}).then();
   }
   else if (vote === "down")
   {
     Users.findOneAndUpdate({username}, {$push: {downvotes: id}}).then();
-    Posts.findOneAndUpdate({_id: id}, {$inc: {votes: -1}}).then();
+    Posts.findOneAndUpdate({_id: id}, {$inc: {votes: -1}}, {timestamps: false}).then();
   }
   res.send("ok");
 });
@@ -125,12 +125,12 @@ router.put('/api/vote/remove', authenticateToken, (req, res) =>
   if (vote === "up")
   {
     Users.findOneAndUpdate({username}, {$pull: {upvotes: id}}).then();
-    Posts.findOneAndUpdate({_id: id}, {$inc: {votes: -1}}).then();
+    Posts.findOneAndUpdate({_id: id}, {$inc: {votes: -1}}, {timestamps: false}).then();
   }
   else if (vote === "down")
   {
     Users.findOneAndUpdate({username}, {$pull: {downvotes: id}}).then();
-    Posts.findOneAndUpdate({_id: id}, {$inc: {votes: 1}}).then();
+    Posts.findOneAndUpdate({_id: id}, {$inc: {votes: 1}}, {timestamps: false}).then();
   }
 
   res.send("ok");
@@ -146,12 +146,12 @@ router.put('/api/vote/update', authenticateToken, (req, res) =>
   if (vote === "up")
   {
     Users.findOneAndUpdate({username}, {$push: {upvotes: id}, $pull: {downvotes: id}}).then();
-    Posts.findOneAndUpdate({_id: id}, {$inc: {votes: 2}}).then();
+    Posts.findOneAndUpdate({_id: id}, {$inc: {votes: 2}}, {timestamps: false}).then();
   }
   else if (vote === "down")
   {
     Users.findOneAndUpdate({username}, {$push: {downvotes: id}, $pull: {upvotes: id}}).then();
-    Posts.findOneAndUpdate({_id: id}, {$inc: {votes: -2}}).then();
+    Posts.findOneAndUpdate({_id: id}, {$inc: {votes: -2}}, {timestamps: false}).then();
   }
 
   res.send("ok");

@@ -100,13 +100,10 @@ const Snippet = (props) =>
     const [voted, setVoted] = useState("");
     const [creatorUsername, setCreatorUsername] = useState("");
     const [user, setUser] = useState({});
-    const [time, setTime] = useState("");
     const navigate = useNavigate();
 
     useEffect(() =>
-    {
-        setTime(formatTime(props.snippet.createdAt));
-        
+    {   
         // Gets the information about the creator of the snippets creator and sets their username to the state
         fetch('/api/user/' + props.snippet.creator, {
         })
@@ -141,12 +138,16 @@ const Snippet = (props) =>
     // Function to format the MongoDB 'createdAt' time to a better format
     const formatTime = (time) => 
     {
-        const splittedTime = time.split("T");
-        const date = splittedTime[0];
-        let hour = splittedTime[1];
-        hour = hour.split(":");
-        hour = hour[0] + ":" + hour[1];
-        return (date + " " + hour);
+        if (time)
+        {
+            const splittedTime = time.split("T");
+            const date = splittedTime[0];
+            let hour = splittedTime[1];
+            hour = hour.split(":");
+            hour = hour[0] + ":" + hour[1];
+            return (date + " " + hour);
+        }
+        return time;
     }
 
     const handlePostClick = () =>
@@ -162,7 +163,12 @@ const Snippet = (props) =>
                 <div className="SnippetInfoArea">
                     <div className="SnippetCreatorArea">
                         <p className="CreatorText"><span className="CreatorTextSpan">Publisher: </span>{creatorUsername}</p>
-                        <p className="CreatorText"><span className="CreatorTextSpan">Posted:</span> {time}</p>
+                        {
+                            props.snippet.createdAt === props.snippet.updatedAt ?
+                            <p className="CreatorText"><span className="CreatorTextSpan">Posted: </span>{formatTime(props.snippet.createdAt)}</p>
+                            :
+                            <p className="CreatorText"><span className="CreatorTextSpan">Updated: </span>{formatTime(props.snippet.updatedAt)}</p>
+                        }
                     </div>
                     <div className="SnippetVoteArea">
                         <div className="VoteArrowArea">

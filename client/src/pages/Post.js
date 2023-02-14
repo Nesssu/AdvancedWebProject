@@ -13,12 +13,12 @@ const Post = (props) =>
     const [post, setPost] = useState({});
     const [user, setUser] = useState({});
     const [creator, setCreator] = useState({});
-    const [time, setTime] = useState("");
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
     const [editable, setEditable] = useState(false);
     const [code, setCode] = useState("");
     const [codeHistory, setCodeHistory] = useState("");
+    const [update, setUpdate] = useState(true);
 
     useEffect(() =>
     {   
@@ -74,7 +74,7 @@ const Post = (props) =>
                 setVoted(res.vote);
             });
         }
-    }, [props]);
+    }, [props, voted, update]);
 
     // This funtions handles the upvote
     const handleUpvote = () =>
@@ -192,9 +192,10 @@ const Post = (props) =>
                         progress: undefined,
                         theme: "light",
                         });
+                    
+                    setUpdate(!update);
                 }
             })
-            props.updateTheView();
         }
         // If the input is empty, message is shown in a toast message
         else 
@@ -214,17 +215,18 @@ const Post = (props) =>
     // Function to format the MongoDB 'createdAt' time to a better format
     const formatTime = (time) => 
     {
-        const splittedTime = time.split("T");
-        const date = splittedTime[0];
-        let hour = splittedTime[1];
-        hour = hour.split(":");
-        hour = hour[0] + ":" + hour[1];
-        return (date + " " + hour);
+        if (time)
+        {
+            const splittedTime = time.split("T");
+            const date = splittedTime[0];
+            let hour = splittedTime[1];
+            hour = hour.split(":");
+            hour = hour[0] + ":" + hour[1];
+            return (date + " " + hour);
+        }
+        return time;
     }
-    const handleEditClick = () => 
-    {
-        setEditable(true);
-    }
+    const handleEditClick = () => { setEditable(true); }
     const handleEdit = (event) => setCode(event.target.value);
     // Function to handle the post editing
     const handleEditSave = () =>
@@ -293,7 +295,7 @@ const Post = (props) =>
                 <h1>Post</h1>
                 <div className="Separator" />
                 <div className="SnippetArea">
-                    <div className="SnippetBackground">
+                    <div className="CodeBackground">
                         <div className="SnippetInputArea">
                             <textarea value={code} className="SnippetInput" readOnly={!editable} onChange={handleEdit} />
                             {/* If the currently logged in user is the same as the creator of this post, editing is allowed */}
@@ -310,7 +312,12 @@ const Post = (props) =>
                         <div className="SnippetInfoArea">
                             <div className="SnippetCreatorArea">
                                 <p className="CreatorText"><span className="CreatorTextSpan">Publisher: </span><a href={"/profile/" + creator._id}>{creator.username}</a></p>
-                                <p className="CreatorText"><span className="CreatorTextSpan">Posted:</span> {time}</p>
+                                {
+                                    post.createdAt === post.updatedAt ?
+                                    <p className="CreatorText"><span className="CreatorTextSpan">Posted: </span>{formatTime(post.createdAt)}</p>
+                                    :
+                                    <p className="CreatorText"><span className="CreatorTextSpan">Updated: </span>{formatTime(post.updatedAt)}</p>
+                                }
                             </div>
                             <div className="SnippetVoteArea">
                                 <div className="VoteArrowArea">
