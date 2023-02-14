@@ -23,7 +23,7 @@ const Post = (props) =>
     useEffect(() =>
     {   
         // Gets the post from the database
-        fetch('/api/code/' + id)
+        fetch('/api/code/data/' + id)
         .then(response => response.json())
         .then(json =>
             {

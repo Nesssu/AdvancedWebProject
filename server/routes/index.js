@@ -29,10 +29,9 @@ router.get('/', function(req, res, next) {
 });
 
 // Route to get a single post
-router.get("/api/code/:id", (req, res) =>
+router.get("/api/code/data/:id", (req, res) =>
 {
   const id = req.params.id;
-
   Posts.findOne({_id: id}, (err, post) =>
   {
     if (err) throw err;
@@ -88,6 +87,7 @@ router.get("/api/code/list", (req, res) =>
 router.get('/api/user/:id', (req, res) =>
 {
   const ObjectId = req.params.id;
+  console.log(ObjectId);
   Users.findOne({_id: ObjectId}, (err, user) =>
   {
     if (err) return res.json({message: "Didn't find user"})

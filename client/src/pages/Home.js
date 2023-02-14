@@ -101,7 +101,6 @@ const Snippet = (props) =>
     const [creatorUsername, setCreatorUsername] = useState("");
     const [user, setUser] = useState({});
     const [time, setTime] = useState("");
-    const [code, setCode] = useState(props.snippet.code);
     const navigate = useNavigate();
 
     useEffect(() =>
@@ -158,7 +157,7 @@ const Snippet = (props) =>
         <div className="SnippetArea">
             <div className="SnippetBackground"  onClick={handlePostClick}>
                 <div className="SnippetInputArea">
-                    <textarea value={code} className="SnippetInput SnippetInputHome" readOnly={true} />
+                    <textarea value={props.snippet.code} className="SnippetInput SnippetInputHome" readOnly={true} />
                 </div>
                 <div className="SnippetInfoArea">
                     <div className="SnippetCreatorArea">
@@ -205,7 +204,9 @@ const Home = (props) =>
             {
                 setCodeSnippets(json.posts);
             }
-        })
+        });
+
+        console.log("Test: After");
 
     }, [update]);
 
