@@ -211,9 +211,6 @@ const Home = (props) =>
                 setCodeSnippets(json.posts);
             }
         });
-
-        console.log("Test: After");
-
     }, [update]);
 
     const updateTheView = () => { setUpdate(!update); } 

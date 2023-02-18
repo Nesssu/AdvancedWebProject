@@ -19,8 +19,7 @@ import { ToastContainer, toast } from "react-toastify";
         setEmail(props.user.email);
         setUsername(props.user.username);
         setBio(props.user.bio);
-
-        console.log(props.user);
+        
         const token = localStorage.getItem('auth_token');
         // If the localStorage doesn't have a token, the user is redirected to the home page, because they are not logged in
         if (!token)

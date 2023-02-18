@@ -15,7 +15,8 @@ const Post = (props) =>
     const [creator, setCreator] = useState({});
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
-    const [editable, setEditable] = useState(false);
+    const [editablePost, setEditablePost] = useState(false);
+    const [editableComment, setEditableComment] = useState(false);
     const [code, setCode] = useState("");
     const [codeHistory, setCodeHistory] = useState("");
     const [update, setUpdate] = useState(true);
@@ -226,10 +227,10 @@ const Post = (props) =>
         }
         return time;
     }
-    const handleEditClick = () => { setEditable(true); }
-    const handleEdit = (event) => setCode(event.target.value);
+    const handlePostEditClick = () => { setEditablePost(true); }
+    const handlePostEdit = (event) => setCode(event.target.value);
     // Function to handle the post editing
-    const handleEditSave = () =>
+    const handlePostEditSave = () =>
     {
         const body = {
             _id: id,
@@ -277,16 +278,29 @@ const Post = (props) =>
                     });
             }
         });
-        setEditable(false);
-        props.updateTheView();
+        setEditablePost(false);
     }
     // Function that handles the cancelling of code editing
-    const handleEditCancel = () =>
+    const handlePostEditCancel = () =>
     {
         // Gets the original code from the state and updates it to the codes state
         setCode(codeHistory);
-        setEditable(false);
-        props.updateTheView();
+        setEditablePost(false);
+    }
+
+    const handleCommentEditClick = () => { setEditableComment(true); }
+
+    const handleCommentEditSave = () =>
+    {
+
+
+        setEditableComment(false);
+    }
+
+    const handleCommentEditCancel = () =>
+    {
+
+        setEditableComment(false);
     }
 
     return (
@@ -297,14 +311,14 @@ const Post = (props) =>
                 <div className="SnippetArea">
                     <div className="CodeBackground">
                         <div className="SnippetInputArea">
-                            <textarea value={code} className="SnippetInput" readOnly={!editable} onChange={handleEdit} />
+                            <textarea value={code} className="SnippetInput" readOnly={!editablePost} onChange={handlePostEdit} />
                             {/* If the currently logged in user is the same as the creator of this post, editing is allowed */}
                             {creator.username === user.username &&
                                 <div className="EditButtonArea" >
-                                    <BiEditAlt className="EditIcon" onClick={handleEditClick} style={editable && {opacity: 0, cursor: 'default'}} />
+                                    <BiEditAlt className="EditIcon" onClick={handlePostEditClick} style={editablePost && {opacity: 0, cursor: 'default'}} />
                                     <div className="ApproveEditArea">
-                                        <RxCheckCircled className="SaveEditIcon" style={!editable && {opacity: 0, cursor: 'default'}} onClick={editable ? handleEditSave : undefined} />
-                                        <RxCrossCircled className="CancelEditIcon" style={!editable && {opacity: 0, cursor: 'default'}} onClick={editable ? handleEditCancel : undefined} />
+                                        <RxCheckCircled className="SaveEditIcon" style={!editablePost && {opacity: 0, cursor: 'default'}} onClick={editablePost ? handlePostEditSave : undefined} />
+                                        <RxCrossCircled className="CancelEditIcon" style={!editablePost && {opacity: 0, cursor: 'default'}} onClick={editablePost ? handlePostEditCancel : undefined} />
                                     </div>
                                 </div>
                             }
@@ -337,12 +351,17 @@ const Post = (props) =>
                                     {
                                         return (<div key={i} className="CommentArea">
                                             <div className="CommentBackground">
-                                                <p className="CommentText">{comment.comment}</p>
-                                                <div className="CommentInfo">
-                                                    <p className="CommentInfoText" >{comment.creator}</p>
-                                                    <p className="CommentInfoText" >{formatTime(comment.createdAt)}</p>
+                                                <textarea value={comment.comment} className="SnippetComment" readOnly={!editableComment} />
+                                                <div className="EditButtonArea" >
+                                                    <BiEditAlt className="EditIcon" onClick={handleCommentEditClick} style={editableComment && {opacity: 0, cursor: 'default'}} />
+                                                    <div className="ApproveEditArea">
+                                                        <RxCheckCircled className="SaveEditIcon" style={!editableComment && {opacity: 0, cursor: 'default'}} onClick={editableComment ? handleCommentEditSave : undefined}/>
+                                                        <RxCrossCircled className="CancelEditIcon" style={!editableComment && {opacity: 0, cursor: 'default'}} onClick={editableComment ? handleCommentEditCancel : undefined}/>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <p className="CommentInfoText" >{comment.creator}</p>
+                                            <p className="CommentInfoText" >{formatTime(comment.createdAt)}</p>
                                         </div>)
                                     })
                             }

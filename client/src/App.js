@@ -10,8 +10,6 @@ import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useEffect } from 'react';
 import { Buffer } from 'buffer';
@@ -45,15 +43,6 @@ function App() {
             <Nav className='ms-0'>
               <Nav.Link href="/home">Home</Nav.Link>
             </Nav>
-            <Form className="d-flex" style={{width: "40%", minWidth: '600px', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
-              <Form.Control
-                type="search"
-                placeholder="Search"
-                className="me-2"
-                aria-label="Search"
-              />
-              <Button variant="outline-light">Search</Button>
-            </Form>
             {/* If the user is not logged in, Login and register links are shown in the navbar */}
             {jwt === null ?
               <Nav className='me-0'>
