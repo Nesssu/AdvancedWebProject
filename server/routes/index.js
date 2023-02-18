@@ -219,6 +219,19 @@ router.post('/api/comment', authenticateToken, (req, res) => {
   });
 });
 
+// Route to update a comment
+router.put('/api/comment/update', authenticateToken, (req, res) =>
+{
+  const _id = req.body.id;
+  const comment = req.body.comment;
+
+  Comments.findOneAndUpdate({_id}, {comment}, (err, ok) =>
+  {
+    if (err) return res.json({success: false, message: "Error while updating comment"});
+    else return res.json({success: true, message: "Comment updated succesfully"});
+  });
+});
+
 // Route to update already posted code snippet.
 router.put('/api/update/code', authenticateToken, (req, res) =>
 {
@@ -229,7 +242,7 @@ router.put('/api/update/code', authenticateToken, (req, res) =>
   {
     if (err) return res.json({success: false, message: "Error while updating code"});
     else return res.json({success: true, message: "Code updated succesfully"});
-  })
+  });
 });
 
 router.post('/api/add/bio', authenticateToken, (req, res) =>

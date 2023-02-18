@@ -6,6 +6,92 @@ import {Buffer} from 'buffer';
 import { ToastContainer, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 
+const Comment = (props) =>
+{
+    const [editable, setEditable] = useState(false);
+    const [comment, setComment] = useState(props.comment);
+    const [commentHistory, setCommentHistory] = useState(props.comment);
+
+    const handleCommentChange = (event) => { setComment(event.target.value); }
+    const handleCommentEditSave = () =>
+    {
+        // Body for the comment update request
+        const body = {
+            id: props._id,
+            comment: comment
+        }
+
+        // Sending data to the server
+        fetch('/api/comment/update', {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": "Bearer " + props.token
+            },
+            body: JSON.stringify(body)
+        })
+        .then(response => response.json())
+        .then(json =>
+            {
+                // If the server responds with the success, a succesful message is shown in a toast message
+                if (json.success)
+                {
+                    toast.success(json.message, {
+                        position: "top-center",
+                        autoClose: 2000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: false,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                        });
+
+                    setCommentHistory(comment);
+                }
+                // Else the error message is shown in a toast message
+                else
+                {
+                    toast.error(json.message, {
+                        position: "top-center",
+                        autoClose: 2000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: false,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                        });
+                }
+            })
+        setEditable(false);
+    }
+    const handleCommentEditCancel = () =>
+    {
+        setComment(commentHistory);
+        setEditable(false);
+    }
+
+    return (
+        <div className="CommentArea">
+            <div className="CommentBackground">
+                <textarea value={comment} className="SnippetComment" readOnly={!editable} onChange={handleCommentChange} />
+                {props.user.username === props.creator &&
+                    <div className="EditButtonArea" >
+                        <BiEditAlt className="EditIcon" onClick={() => setEditable(true)} style={editable && {opacity: 0, cursor: 'default'}} />
+                        <div className="ApproveEditArea">
+                            <RxCheckCircled className="SaveEditIcon" style={!editable && {opacity: 0, cursor: 'default'}} onClick={editable ? handleCommentEditSave : undefined}/>
+                            <RxCrossCircled className="CancelEditIcon" style={!editable && {opacity: 0, cursor: 'default'}} onClick={editable ? handleCommentEditCancel : undefined}/>
+                        </div>
+                    </div>
+                }   
+            </div>
+            <p className="CommentInfoText" >{props.creator}</p>
+            <p className="CommentInfoText" >{props.formatTime(props.createdAt)}</p>
+        </div>
+    )
+}
+
 const Post = (props) =>
 {
     const {id} = useParams();
@@ -16,7 +102,6 @@ const Post = (props) =>
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
     const [editablePost, setEditablePost] = useState(false);
-    const [editableComment, setEditableComment] = useState(false);
     const [code, setCode] = useState("");
     const [codeHistory, setCodeHistory] = useState("");
     const [update, setUpdate] = useState(true);
@@ -288,21 +373,6 @@ const Post = (props) =>
         setEditablePost(false);
     }
 
-    const handleCommentEditClick = () => { setEditableComment(true); }
-
-    const handleCommentEditSave = () =>
-    {
-
-
-        setEditableComment(false);
-    }
-
-    const handleCommentEditCancel = () =>
-    {
-
-        setEditableComment(false);
-    }
-
     return (
         <div className="App">
             <div className="Post">
@@ -349,20 +419,7 @@ const Post = (props) =>
                             {
                                 comments.map((comment, i) => 
                                     {
-                                        return (<div key={i} className="CommentArea">
-                                            <div className="CommentBackground">
-                                                <textarea value={comment.comment} className="SnippetComment" readOnly={!editableComment} />
-                                                <div className="EditButtonArea" >
-                                                    <BiEditAlt className="EditIcon" onClick={handleCommentEditClick} style={editableComment && {opacity: 0, cursor: 'default'}} />
-                                                    <div className="ApproveEditArea">
-                                                        <RxCheckCircled className="SaveEditIcon" style={!editableComment && {opacity: 0, cursor: 'default'}} onClick={editableComment ? handleCommentEditSave : undefined}/>
-                                                        <RxCrossCircled className="CancelEditIcon" style={!editableComment && {opacity: 0, cursor: 'default'}} onClick={editableComment ? handleCommentEditCancel : undefined}/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <p className="CommentInfoText" >{comment.creator}</p>
-                                            <p className="CommentInfoText" >{formatTime(comment.createdAt)}</p>
-                                        </div>)
+                                        return (<Comment key={i} comment={comment.comment} creator={comment.creator} createdAt={comment.createdAt} formatTime={formatTime} token={props.token} _id={comment._id} user={user} />)
                                     })
                             }
                         </div>
