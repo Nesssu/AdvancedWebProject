@@ -117,8 +117,8 @@ h1 {
 }
 
 .NewSnippetBackground {
-  width: 40%;
-  min-width: 600px;
+  width: 95%;
+  max-width: 800px;
   border: none;
   border-radius: 5px;
   box-shadow: 0px 0px 5px #888;
@@ -227,8 +227,8 @@ h1 {
 }
 
 .SnippetBackground {
-  width: 40%;
-  min-width: 600px;
+  width: 95%;
+  max-width: 800px;
   border: none;
   border-radius: 5px;
   box-shadow: 0px 0px 5px #888;
@@ -528,8 +528,8 @@ h1 {
 }
 
 .ProfileAreaBackground {
-  width: 50%;
-  min-width: 600px;
+  width: 95%;
+  max-width: 800px;
   padding: 20px;
   margin-top: 25px;
   border-radius: 5px;
@@ -587,8 +587,8 @@ h1 {
 }
 
 .CodeBackground {
-  width: 40%;
-  min-width: 600px;
+  width: 95%;
+  max-width: 800px;
   border: none;
   border-radius: 5px;
   box-shadow: 0px 0px 5px #888;
