@@ -41,27 +41,27 @@ function App() {
         <Navbar bg="dark" variant="dark" fixed='top' >
           <Container >
             <Nav className='ms-0'>
-              <Nav.Link href="/home">Home</Nav.Link>
+              <Nav.Link href="/">Home</Nav.Link>
             </Nav>
             {/* If the user is not logged in, Login and register links are shown in the navbar */}
             {jwt === null ?
               <Nav className='me-0'>
-                <Nav.Link href="/">Login</Nav.Link>
+                <Nav.Link href="/login">Login</Nav.Link>
                 <Nav.Link href="/register">Register</Nav.Link>
               </Nav>
               :
               <Nav className='me-0'>
                 {/* If the user is logged in, profile and logout links are shown in the navbar */}
                 <Nav.Link href="/profile" >Profile</Nav.Link>
-                <Nav.Link href="/" onClick={logout}>Logout</Nav.Link>
+                <Nav.Link href="/login" onClick={logout}>Logout</Nav.Link>
               </Nav>
             }
           </Container>
         </Navbar>
         <Routes>
-          <Route path="/" element={<Login setJwt={setJwt} setUser={setUser}/>}/>
+          <Route path="/login" element={<Login setJwt={setJwt} setUser={setUser}/>}/>
           <Route path="/register" element={<Register/>}/>
-          <Route path="/home" element={<Home jwt={jwt} user={user}/>}/>
+          <Route path="/" element={<Home jwt={jwt} user={user}/>}/>
           <Route path="/profile" element={<Profile user={user} token={jwt} />} />
           <Route path="/profile/:id" element={<ViewProfile />} />
           <Route path="/post/:id" element={<Post token={jwt} user={user}/>} />

@@ -19,7 +19,7 @@ const Login = (props) =>
         // If the localStorage has a token, the user is already logged in and is redirected to the home page
         if (token)
         {
-            navigate('/home');
+            navigate('/');
         }
     }, []);
 
@@ -45,7 +45,7 @@ const Login = (props) =>
                     // The token is stored into localStorage
                     localStorage.setItem('auth_token', json.token);
                     // And the user is redirected to the home page
-                    navigate("/home");
+                    navigate("/");
                 }
                 // If the login info is invalid the error message is shown inside a toast message
                 else {

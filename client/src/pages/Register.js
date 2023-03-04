@@ -44,7 +44,7 @@ const Register = () =>
             else
             {
                 // If the server responds with a empty object, the user is redirected to the login page
-                navigate("/");
+                navigate("/login");
             }
         })
     }
@@ -58,7 +58,7 @@ const Register = () =>
             <input id="registerPassword" className="RegisterPassword" type="password" placeholder="Password" value={password} onChange={handlePasswordChange}/>
             <input id="registerSubmit" className="RegisterSubmit" type="submit" value="Register" onClick={register}/>
 
-            <p className="InfoText1">Already have an account? <a href="/">Login</a></p>
+            <p className="InfoText1">Already have an account? <a href="/login">Login</a></p>
 
             <ToastContainer/>
         </div>

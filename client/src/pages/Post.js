@@ -68,6 +68,7 @@ const Comment = (props) =>
     }
     const handleCommentEditCancel = () =>
     {
+        // If the user cancels the edit, the old code will be taken from the storage nad nothing will change
         setComment(commentHistory);
         setEditable(false);
     }
@@ -76,6 +77,7 @@ const Comment = (props) =>
         <div className="CommentArea">
             <div className="CommentBackground">
                 <textarea value={comment} className="SnippetComment" readOnly={!editable} onChange={handleCommentChange} />
+                {/* If the current user is the same as the creator of the comment, they can edit the comment */}
                 {props.user.username === props.creator &&
                     <div className="EditButtonArea" >
                         <BiEditAlt className="EditIcon" onClick={() => setEditable(true)} style={editable && {opacity: 0, cursor: 'default'}} />
@@ -396,6 +398,7 @@ const Post = (props) =>
                         <div className="SnippetInfoArea">
                             <div className="SnippetCreatorArea">
                                 <p className="CreatorText"><span className="CreatorTextSpan">Publisher: </span><a href={"/profile/" + creator._id}>{creator.username}</a></p>
+                                {/* If the createdAt and updatedAt timestamps are the same, then the post hasn't been edited and 'Posted' text is shown. Otherwise a 'Updated' text will be shown */}
                                 {
                                     post.createdAt === post.updatedAt ?
                                     <p className="CreatorText"><span className="CreatorTextSpan">Posted: </span>{formatTime(post.createdAt)}</p>

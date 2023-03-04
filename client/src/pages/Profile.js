@@ -24,7 +24,7 @@ import { ToastContainer, toast } from "react-toastify";
         // If the localStorage doesn't have a token, the user is redirected to the home page, because they are not logged in
         if (!token)
         {
-            navigate('/home');
+            navigate('/');
         }
     }, [props.user, emailEdit, usernameEdit]);
     // Functions that handle the state changes for the inputs

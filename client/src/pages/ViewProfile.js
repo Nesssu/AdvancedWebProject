@@ -12,9 +12,11 @@ const ViewProfile = (props) =>
 
     useEffect(() =>
     {
+        // fetching data about the user
         fetch('/api/user/' + id)
         .then(response => response.json())
         .then(json => {
+            // if the user is found their data is updated to the states
             if (json.user)
             {
                 setEmail(json.user.email);
@@ -25,6 +27,7 @@ const ViewProfile = (props) =>
         });
     }, [id]);
 
+    // function to format the time to a nicer format
     const formatTime = (time) =>
     {
         if (time)
