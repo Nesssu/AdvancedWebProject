@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import fatneek from './fatneek.png';
 
 const ViewProfile = (props) =>
 {
@@ -45,9 +44,6 @@ const ViewProfile = (props) =>
             <h1>Profile</h1>
             <div className="ProfileAreaBackground" >
                 <div className="ProfileInfoArea">
-                    <div className="ProfilePictureArea">
-                        <div style={{backgroundImage: `url(${fatneek})`, width: "100px", height: "100px", backgroundSize: "cover", borderRadius: "5px"}} />
-                    </div>
                     <div className="ProfileDataArea">
                         <p className="Username">{username}</p>
                         <p className="Email">{email}</p>
