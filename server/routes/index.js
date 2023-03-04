@@ -87,7 +87,6 @@ router.get("/api/code/list", (req, res) =>
 router.get('/api/user/:id', (req, res) =>
 {
   const ObjectId = req.params.id;
-  console.log(ObjectId);
   Users.findOne({_id: ObjectId}, (err, user) =>
   {
     if (err) return res.json({message: "Didn't find user"})

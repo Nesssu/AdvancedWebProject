@@ -37,27 +37,32 @@ h1 {
 
 .LoginEmail {
   margin-top: 50px;
-  width: 400px;
+  width: 80%;
+  max-width: 400px;
 }
 
 .RegisterEmail {
   margin-top: 20px;
-  width: 400px;
+  width: 80%;
+  max-width: 400px;
 }
 
 .RegisterUsername {
   margin-top: 50px;
-  width: 400px;
+  width: 80%;
+  max-width: 400px;
 }
 
 .LoginPassword {
   margin-top: 20px;
-  width: 400px;
+  width: 80%;
+  max-width: 400px;
 }
 
 .RegisterPassword {
   margin-top: 20px;
-  width: 400px;
+  width: 80%;
+  max-width: 400px;
 }
 
 .LoginSubmit {

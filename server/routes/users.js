@@ -42,19 +42,20 @@ router.post("/users/register",
 
   if (!errors.isEmpty())
   {
-    return res.json({message: "Password is not strong enough"});
+    return res.json({message: "Password is not strong enough!"});
   }
 
   const email = req.body.email;
   const password = req.body.password;
   const username = req.body.username;
-
+  // First check if the username or email is already used
   User.findOne({$or: [{email}, {username}]}, (err, user) =>
   {
     if (err) throw err;
     if (user) return res.json({message: "Email or username already in use"});
     else
     {
+      // If not, then start the registering the user
       bcrypt.genSalt(10, (err, salt) =>
       {
         bcrypt.hash(password, salt, (err, hash) =>
